@@ -25,6 +25,9 @@ export async function GetAssignments(cookie:string, assignmentType: AssignmentTy
             case 1:
                 status = "Completed"
                 break;
+            case 4:
+                status = "Graded";
+                break;
             default:
                 status = "N/A"
                 break;
