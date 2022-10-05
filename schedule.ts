@@ -9,16 +9,20 @@ if (verbose === true)
 {
     returnvalue = await data.json();
 } else
+date.toLocaleTimeString
 {
     returnvalue = [];
     for (let period of (await data.json()) as any[]) {
         returnvalue.push({
-            "Course Title": period.CourseTitle,
-            "Room Number": period.RoomNumber,
-            "Calendar Date": period.CalendarDate,
-            "Start Time": period.StartTime,
-            "End Time": period.EndTime,
-            "Block": period.Block,
+            "Course Title": period.CourseTitle || "N/A",
+            "Room Number": period.RoomNumber || "N/A",
+            "Start Time": new Date(period.StartTime).toLocaleTimeString(Intl.DateTimeFormat().resolvedOptions().locale, {
+                timeStyle: "short"
+            }) || "N/A",
+            "End Time": new Date(period.EndTime).toLocaleTimeString(Intl.DateTimeFormat().resolvedOptions().locale, {
+                timeStyle: "short"
+            }) || "N/A",
+            "Block": period.Block || "N/A",
             
         })
     }

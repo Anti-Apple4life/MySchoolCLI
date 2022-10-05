@@ -30,13 +30,13 @@ export async function GetAssignments(cookie:string, assignmentType: AssignmentTy
                 break;
         }
         returnvalue.push({
-            "Class": assignment.groupname,
-            "Type": assignment.assignment_type,
-            "Date Assigned": new Date(assignment.date_assigned).toLocaleString(Intl.DateTimeFormat().resolvedOptions().locale),
-            "Date Due": new Date(assignment.date_due).toLocaleString(Intl.DateTimeFormat().resolvedOptions().locale),
-            "Title": assignment.short_description,
-            "Description": assignment.long_description,
-            "Completed": status
+            "Class": assignment.groupname || "N/A",
+            "Type": assignment.assignment_type || "N/A",
+            "Date Assigned": new Date(assignment.date_assigned).toLocaleString(Intl.DateTimeFormat().resolvedOptions().locale) || "N/A",
+            "Date Due": new Date(assignment.date_due).toLocaleString(Intl.DateTimeFormat().resolvedOptions().locale) || "N/A",
+            "Title": assignment.short_description || "N/A",
+            "Description": assignment.long_description || "N/A",
+            "Completed": status || "N/A"
             
         })
     }
