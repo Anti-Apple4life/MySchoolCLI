@@ -4,6 +4,7 @@ import { CheckTokenValid } from "./checktokenvalid.js";
 import prompts from "prompts";
 import { AssignmentType, GetAssignments } from "./assignments.js";
 import fs from 'fs/promises';
+import { queryMode } from "./querymode.js";
 
 (async () => {
     let token: string;
@@ -42,6 +43,7 @@ const operation = await prompts({
     choices: [
       { title: 'View the ShipleyNet Schedule', value: 'schedule' },
       { title: 'View ShipleyNet Assignments', value: 'assignments' },
+      { title: 'Enter Query Mode', value: 'query' },
       { title: 'Exit', value: 'exit' }
     ],
   })
@@ -63,6 +65,8 @@ const operation = await prompts({
     case "exit":
         running = false;
         break;
+    case "query":
+      await queryMode(token);
     default:
         break;
   }

@@ -1,6 +1,6 @@
 export async function GetAssignments(cookie:string, assignmentType: AssignmentType = AssignmentType.Active, startDate: Date, endDate: Date, verbose:boolean = false): Promise<object>
 {
-     const data = await fetch(`https://shipleyschool.myschoolapp.com/api/DataDirect/AssignmentCenterAssignments/?format=json&filter=${assignmentType}&dateStart=${startDate.toLocaleDateString('en-US').replaceAll('/', '%2F')}&dateEnd=${endDate.toLocaleDateString('en-US').replaceAll('/', '%2F')}&persona=2`, {
+     const data = await fetch(`https://shipleyschool.myschoolapp.com/api/DataDirect/AssignmentCenterAssignments/?format=json&filter=${assignmentType}&dateStart=${startDate.toLocaleDateString('en-US').replaceAll('/', '%2F')}&dateEnd=${endDate.toLocaleDateString('en-US').replaceAll('/', '%2F')}&persona=2&statusList=&sectionList=`, {
         "headers": {
             "Cookie": `t=${cookie}`,
         }
