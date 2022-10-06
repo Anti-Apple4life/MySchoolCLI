@@ -130,3 +130,5 @@ dist
 .pnp.*
 # Compiled Typescript Files
 /**/*.js
+# MySchoolApp Tokens
+token.secret
