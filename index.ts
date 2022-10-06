@@ -5,6 +5,7 @@ import prompts from "prompts";
 import { AssignmentType, GetAssignments } from "./assignments.js";
 import fs from 'fs/promises';
 import { queryMode } from "./querymode.js";
+import { argv } from "process";
 
 (async () => {
     let token: string;
@@ -35,6 +36,8 @@ import { queryMode } from "./querymode.js";
           }
     }
     let running = true
+    if (argv.includes("-q" || argv.includes("--query")))
+    queryMode(token);
 while (running) {
 const operation = await prompts({
     type: 'select',

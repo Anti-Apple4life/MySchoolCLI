@@ -4,6 +4,8 @@ import promptbuilder from "prompt-sync";
 import { GetSchedule } from "./schedule.js";
 const prompt = promptbuilder();
 const currentCommandList = `help: show this help message
+get SCHEDULE|ASSIGNMENTS [for/of {today/tomorrow/yesterday/DATE}]: view selelected item.   
+view: alias of 'get'
 exit [program/querymode]: exit either the program or querymode.`;
 export async function queryMode(token: string) {
   while (true) {
