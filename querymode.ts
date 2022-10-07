@@ -72,7 +72,7 @@ async function handleGet(splitGet: string[], token: string) {
               break;
               case "yesterday":;
               const yesterday= new Date();
-              yesterday.setDate(yesterday.getDate() + 1);
+              yesterday.setDate(yesterday.getDate() - 1);
               console.table(await GetSchedule(token, yesterday));
               break;
             default:
