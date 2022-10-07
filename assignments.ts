@@ -16,10 +16,10 @@ export async function GetAssignments(cookie:string, assignmentType: AssignmentTy
     for (let assignment of (await data.json()) as any[]) {
         let status: string;
         switch (assignment.assignment_status) {
-            case 0:
+            case -1:
                 status = "To Do";
                 break;
-            case -1:
+            case 0:
                 status = "In Progress"
                 break;
             case 1:
