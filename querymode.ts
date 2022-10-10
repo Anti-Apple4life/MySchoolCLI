@@ -1,4 +1,4 @@
-import { exec, execSync } from "child_process";
+import { execSync } from "child_process";
 import { exit } from "process";
 import promptbuilder from "prompt-sync";
 import { GetSchedule } from "./schedule.js";
@@ -6,8 +6,10 @@ const prompt = promptbuilder();
 const currentCommandList = `help: show this help message
 get SCHEDULE|ASSIGNMENTS [for/of {today/tomorrow/yesterday/DATE}]: view selelected item.   
 view: alias of 'get'
-exit [program/querymode]: exit either the program or querymode.`;
+exit [program/querymode]: exit either the program or querymode.
+verbose [on/off]: set the verbose option.`;
 export async function queryMode(token: string) {
+  let verbose: boolean = false;
   while (true) {
     let res = prompt("querymode> ")?.toLowerCase();
     if (res === null || res === undefined) {
@@ -16,7 +18,7 @@ export async function queryMode(token: string) {
     switch (res) {
       case res.match(/^exit|^quit/)?.input:
         const shouldReturn = handleExit(res.split(" "));
-        if (shouldReturn === true) {
+        if (shouldReturn) {
           return;
         }
         break;
@@ -32,9 +34,24 @@ export async function queryMode(token: string) {
         }
         break;
       case res.match(/^get|^view/)?.input:
-        await handleGet(res.split(" "), token);
+        await handleGet(res.split(" "), token, verbose);
         break;
-
+      case res.match(/^verbose/)?.input:
+        const splitArgument: string[] = res.split(' ');
+        switch (splitArgument[1]) {
+          case "true":
+            verbose = true;
+            console.log(`Verbose: ${verbose}`);
+            break;
+          case "false":
+            verbose = false;
+            console.log(`Verbose: ${verbose}`);
+            break;
+          default:
+            console.log(`Verbose: ${verbose}`);
+            break;
+        }
+        break;
       default:
         console.error("This is not implemented yet.");
         break;
@@ -49,40 +66,50 @@ function handleExit(splitExit: string[]): boolean {
       break;
     case "querymode" || "query":
       returnvalue = true;
+      break;
     default:
       returnvalue = true;
       break;
   }
   return returnvalue;
 }
-async function handleGet(splitGet: string[], token: string) {
+async function handleGet(splitGet: string[], token: string, verbose:boolean) {
+  const print = (item: any) => {
+    if (verbose)
+    {
+      console.log(item);
+    } else if (!verbose)
+    {
+      console.table(item);
+    }
+  };
   switch (splitGet[1]) {
     case "schedule":
       switch (splitGet[2]) {
         case "for" || "of":
           switch (splitGet[3]) {
             case "today":
-              console.table(await GetSchedule(token, new Date()));
+              print(await GetSchedule(token, new Date(), verbose));
               break;
             case "tomorrow":
               const today = new Date();
               const tomorrow = new Date(today);
               tomorrow.setDate(tomorrow.getDate() + 1);
-              console.table(await GetSchedule(token, tomorrow));
+              print(await GetSchedule(token, tomorrow, verbose));
               break;
-              case "yesterday":;
+              case "yesterday":
               const yesterday= new Date();
               yesterday.setDate(yesterday.getDate() - 1);
-              console.table(await GetSchedule(token, yesterday));
+              print(await GetSchedule(token, yesterday, verbose));
               break;
             default:
-                console.table(await GetSchedule(token, new Date(splitGet[3])));
+                print(await GetSchedule(token, new Date(splitGet[3]), verbose));
               break;
           }
           break;
 
         default:
-          console.table(await GetSchedule(token, new Date()));
+          print(await GetSchedule(token, new Date(), verbose));
       }
       break;
     case "assignments":

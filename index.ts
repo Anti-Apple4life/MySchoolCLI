@@ -11,8 +11,9 @@ import { argv } from "process";
     let token: string;
     try {
         token = (await fs.readFile("token.secret")).toString();
-        if (await CheckTokenValid(token) === false)
+        if (!await CheckTokenValid(token))
         {
+            // noinspection ExceptionCaughtLocallyJS
             throw new Error("You need to refresh your token.")
         }
     } catch (error) {
@@ -21,7 +22,7 @@ import { argv } from "process";
             name: "token",
             message: "Please enter your ShipleyNet token to use RevNet.",
           });
-          if (await CheckTokenValid(initaltoken.token) === false) {
+          if (!await CheckTokenValid(initaltoken.token)) {
             throw new Error("This token is invalid");
           }
           token = initaltoken.token
@@ -37,7 +38,7 @@ import { argv } from "process";
     }
     let running = true
     if (argv.includes("-q" || argv.includes("--query")))
-    queryMode(token);
+    await queryMode(token);
 while (running) {
 const operation = await prompts({
     type: 'select',
@@ -70,6 +71,7 @@ const operation = await prompts({
         break;
     case "query":
       await queryMode(token);
+      break;
     default:
         break;
   }

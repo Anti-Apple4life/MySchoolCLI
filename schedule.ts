@@ -5,11 +5,10 @@ export async function GetSchedule(cookie:string, date: Date, verbose:boolean = f
     }
 });
 let returnvalue: any;
-if (verbose === true)
+if (verbose)
 {
     returnvalue = await data.json();
 } else
-date.toLocaleTimeString
 {
     returnvalue = [];
     for (let period of (await data.json()) as any[]) {
