@@ -53,7 +53,6 @@ import { config } from "./config.js";
     if (args.includes("-q" || args.includes("--query")))
     await queryMode(cfg.token, cfg.url);
 while (running) {
-  console.log(cfg.url)
 const operation = await prompts({
     type: 'select',
     name: 'operation',
