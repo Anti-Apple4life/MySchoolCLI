@@ -1,9 +1,9 @@
 {
-  "name": "revnet",
+  "name": "MySchoolCLI",
   "version": "1.0.0",
   "type": "module",
   "description": "",
-  "main": "shipleynet.js",
+  "main": "index.js",
   "scripts": {
     "dev": "tsc && node index.js"
   },
