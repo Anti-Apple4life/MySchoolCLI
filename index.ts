@@ -32,7 +32,6 @@ import { config } from "./config.js";
     } else
     {
       let config: config = JSON.parse((await fs.readFile("data.json")).toString())
-      console.log(config)
         if (!await CheckTokenValid(config.token))
         {
           const token = await prompts({
