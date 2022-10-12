@@ -39,7 +39,7 @@ export async function GetAssignments(cookie:string, url:string, assignmentType: 
             "Date Due": new Date(assignment.date_due).toLocaleString(Intl.DateTimeFormat().resolvedOptions().locale) || "N/A",
             "Title": assignment.short_description || "N/A",
             "Description": assignment.long_description || "N/A",
-            "Completed": status || "N/A"
+            "Status": status || "N/A"
             
         })
     }

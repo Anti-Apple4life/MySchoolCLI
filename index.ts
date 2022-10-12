@@ -32,6 +32,7 @@ import { config } from "./config.js";
     } else
     {
       let config: config = JSON.parse((await fs.readFile("data.json")).toString())
+      console.log(config)
         if (!await CheckTokenValid(config.token))
         {
           const token = await prompts({
@@ -45,12 +46,15 @@ import { config } from "./config.js";
           config.token = token.token;
           cfg = config;
           await fs.writeFile("data.json", JSON.stringify(config))
+        } else {
+          cfg = config;
         }
     }
     let running = true
     if (args.includes("-q" || args.includes("--query")))
     await queryMode(cfg.token, cfg.url);
 while (running) {
+  console.log(cfg.url)
 const operation = await prompts({
     type: 'select',
     name: 'operation',
