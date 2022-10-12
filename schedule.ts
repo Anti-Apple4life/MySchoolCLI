@@ -1,5 +1,5 @@
-export async function GetSchedule(cookie:string, date: Date, verbose:boolean = false): Promise<object> {
-    const data = await fetch(`https://shipleyschool.myschoolapp.com/api/schedule/MyDayCalendarStudentList/?scheduleDate=${date.toLocaleDateString('en-US').replaceAll('/', '%2F')}&personaId=2`, {
+export async function GetSchedule(cookie:string, url:string, date: Date, verbose:boolean = false): Promise<object> {
+    const data = await fetch(`https://${url}/api/schedule/MyDayCalendarStudentList/?scheduleDate=${date.toLocaleDateString('en-US').replaceAll('/', '%2F')}&personaId=2`, {
     "headers": {
         "Cookie": `t=${cookie}`,
     }

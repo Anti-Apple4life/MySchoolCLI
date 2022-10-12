@@ -132,3 +132,6 @@ dist
 /**/*.js
 # MySchoolApp Tokens
 token.secret
+data.json
+# JetBrains Folders
+.idea/

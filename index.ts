@@ -4,49 +4,60 @@ import { CheckTokenValid } from "./checktokenvalid.js";
 import prompts from "prompts";
 import { AssignmentType, GetAssignments } from "./assignments.js";
 import fs from 'fs/promises';
+import { existsSync as fileExists } from "fs";
 import { queryMode } from "./querymode.js";
-import { argv } from "process";
+import { argv as args } from "process";
+import { config } from "./config.js";
 
 (async () => {
-    let token: string;
-    try {
-        token = (await fs.readFile("token.secret")).toString();
-        if (!await CheckTokenValid(token))
+  let cfg: config = new config();
+    if (!fileExists("data.json"))
+    {
+      const url = await prompts({
+        type: 'text',
+        name: 'url',
+        message: 'Please enter your MySchoolApp URL (eg: awesomeschool.myschoolapp.com)',
+      })
+      const token = await prompts({
+        type: 'text',
+        name: 'token',
+        message: 'Please enter your MySchoolApp token',
+      })
+      if (!await CheckTokenValid(token.token))
         {
-            // noinspection ExceptionCaughtLocallyJS
-            throw new Error("You need to refresh your token.")
+            throw new Error("This token is invalid.")
         }
-    } catch (error) {
-        const initaltoken = await prompts({
-            type: "text",
-            name: "token",
-            message: "Please enter your ShipleyNet token to use RevNet.",
-          });
-          if (!await CheckTokenValid(initaltoken.token)) {
-            throw new Error("This token is invalid");
+      cfg = new config(token.token, url.url)
+      await fs.writeFile("data.json", JSON.stringify(cfg))
+    } else
+    {
+      let config: config = JSON.parse((await fs.readFile("data.json")).toString())
+        if (!await CheckTokenValid(config.token))
+        {
+          const token = await prompts({
+            type: 'text',
+            name: 'token',
+            message: 'Please enter your MySchoolApp token',
+          })
+          if (!await CheckTokenValid(token.token)) {
+            throw new Error("This token is invalid.")
           }
-          token = initaltoken.token
-          const savetoken = await prompts({
-            type: "confirm",
-            name: "savetofile",
-            message:
-              "Would you like to save this token for later use? It should work for about 3 hours",
-          });
-          if (savetoken.savetofile === true) {
-            await fs.writeFile("token.secret", token)
-          }
+          config.token = token.token;
+          cfg = config;
+          await fs.writeFile("data.json", JSON.stringify(config))
+        }
     }
     let running = true
-    if (argv.includes("-q" || argv.includes("--query")))
-    await queryMode(token);
+    if (args.includes("-q" || args.includes("--query")))
+    await queryMode(cfg.token, cfg.url);
 while (running) {
 const operation = await prompts({
     type: 'select',
     name: 'operation',
     message: 'What would you like to do?',
     choices: [
-      { title: 'View the ShipleyNet Schedule', value: 'schedule' },
-      { title: 'View ShipleyNet Assignments', value: 'assignments' },
+      { title: 'View Schedule', value: 'schedule' },
+      { title: 'View Assignments', value: 'assignments' },
       { title: 'Enter Query Mode', value: 'query' },
       { title: 'Exit', value: 'exit' }
     ],
@@ -60,17 +71,17 @@ const operation = await prompts({
         initial: new Date(),
         mask: "M/D/YYYY"
       })
-        console.table(await GetSchedule(token, dateSelect.value));
+        console.table(await GetSchedule(cfg.token, cfg.url, dateSelect.value));
         break;
     case "assignments":
       const [viewType, startDate, stopDate] = await GetAssignmentSelectionInfo();
-      console.log(await GetAssignments(token, viewType, startDate, stopDate))
+      console.log(await GetAssignments(cfg.token, cfg.url, viewType, startDate, stopDate))
         break;
     case "exit":
         running = false;
         break;
     case "query":
-      await queryMode(token);
+      await queryMode(cfg.token, cfg.url);
       break;
     default:
         break;

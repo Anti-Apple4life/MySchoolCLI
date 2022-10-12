@@ -8,7 +8,7 @@ get SCHEDULE|ASSIGNMENTS [for/of {today/tomorrow/yesterday/DATE}]: view selelect
 view: alias of 'get'
 exit [program/querymode]: exit either the program or querymode.
 verbose [on/off]: set the verbose option.`;
-export async function queryMode(token: string) {
+export async function queryMode(token: string, url:string) {
   let verbose: boolean = false;
   while (true) {
     let res = prompt("querymode> ")?.toLowerCase();
@@ -34,7 +34,7 @@ export async function queryMode(token: string) {
         }
         break;
       case res.match(/^get|^view/)?.input:
-        await handleGet(res.split(" "), token, verbose);
+        await handleGet(res.split(" "), token, url, verbose);
         break;
       case res.match(/^verbose/)?.input:
         const splitArgument: string[] = res.split(' ');
@@ -73,7 +73,7 @@ function handleExit(splitExit: string[]): boolean {
   }
   return returnvalue;
 }
-async function handleGet(splitGet: string[], token: string, verbose:boolean) {
+async function handleGet(splitGet: string[], token: string, url:string, verbose:boolean) {
   const print = (item: any) => {
     if (verbose)
     {
@@ -89,27 +89,27 @@ async function handleGet(splitGet: string[], token: string, verbose:boolean) {
         case "for" || "of":
           switch (splitGet[3]) {
             case "today":
-              print(await GetSchedule(token, new Date(), verbose));
+              print(await GetSchedule(token, url, new Date(), verbose));
               break;
             case "tomorrow":
               const today = new Date();
               const tomorrow = new Date(today);
               tomorrow.setDate(tomorrow.getDate() + 1);
-              print(await GetSchedule(token, tomorrow, verbose));
+              print(await GetSchedule(token, url, tomorrow, verbose));
               break;
               case "yesterday":
               const yesterday= new Date();
               yesterday.setDate(yesterday.getDate() - 1);
-              print(await GetSchedule(token, yesterday, verbose));
+              print(await GetSchedule(token, url, yesterday, verbose));
               break;
             default:
-                print(await GetSchedule(token, new Date(splitGet[3]), verbose));
+                print(await GetSchedule(token, url, new Date(splitGet[3]), verbose));
               break;
           }
           break;
 
         default:
-          print(await GetSchedule(token, new Date(), verbose));
+          print(await GetSchedule(token, url, new Date(), verbose));
       }
       break;
     case "assignments":
